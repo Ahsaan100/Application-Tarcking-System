@@ -6,4 +6,5 @@ Candidiate Summary:
 Experience:
 Recommendation:
 
-<img width="609" alt="Screenshot 2024-12-03 141129" src="https://github.com/user-attachments/assets/00c3c237-8d8e-411d-bf4c-7dbfcb83a389">
+![main1-·-Streamlit-12-03-2024_02_20_PM](https://github.com/user-attachments/assets/25ce28a3-b540-4c3e-90eb-0c28e98580b5)
+
