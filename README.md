@@ -1,7 +1,7 @@
 In this project, I have harnessed the power of LLM (Large Language Model) to create a customized ATS . This system will meticulously evaluate an applicant's profile, taking into account their skills, experience, and education, ultimately assigning a score to determine their suitability for a given job.
 The response will be in the following format
-** Job Description Match:
-** Missing Keywords:
+* Job Description Match:
+* Missing Keywords:
 * Candidiate Summary:
 * Experience:
 * Recommendation:
