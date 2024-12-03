@@ -67,33 +67,49 @@ I want the response in one single string having the structure
 
 # Streamlit app
 # Initialize Streamlit app
-st.title("Intelligent ATS-Enhance Your Resume ATS")
+st.title("Intelligent ATS - Enhance Your Resume for ATS")
 st.markdown('<style>h1{color: orange; text-align: center;}</style>', unsafe_allow_html=True)
-job_description = st.text_area("Paste the Job Description",height=300)
+
+# Input fields
+job_description = st.text_area("Paste the Job Description", height=300)
 uploaded_file = st.file_uploader("Upload Your Resume", type=["pdf", "docx"], help="Please upload a PDF or DOCX file")
 
+# Submit button
 submit_button = st.button("Submit")
 
 if submit_button:
     if uploaded_file is not None:
+        # Extract text based on file type
         if uploaded_file.type == "application/pdf":
             resume_text = extract_text_from_pdf_file(uploaded_file)
         elif uploaded_file.type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
             resume_text = extract_text_from_docx_file(uploaded_file)
-        response_text = generate_response_from_gemini(input_prompt_template.format(text=resume_text, job_description=job_description))
 
-        # Extract Job Description Match percentage from the response
-        match_percentage_str = response_text.split('"Job Description Match":"')[1].split('"')[0]
+        # Generate response using Gemini API
+        response_text = generate_response_from_gemini(
+            input_prompt_template.format(text=resume_text, job_description=job_description)
+        )
 
-        # Remove percentage symbol and convert to float
-        match_percentage = float(match_percentage_str.rstrip('%'))
+        # Parse response to extract details
+        import json
+        response_data = json.loads(response_text)
 
+        # Display the results in a cleaner format
         st.subheader("ATS Evaluation Result:")
-        st.write(response_text)
-        #st.write(f'{{\n"Job Description Match": "{match_percentage}%",\n"Missing Keywords": "",\n"Candidate Summary": "",\n"Experience": ""\n}}')
+        st.markdown(
+            f"""
+            - **Job Description Match:** {response_data.get("Job Description Match", "N/A")}
+            - **Missing Keywords:** {response_data.get("Missing Keywords", "N/A")}
+            - **Candidate Summary:** {response_data.get("Candidate Summary", "N/A")}
+            - **Experience:** {response_data.get("Experience", "N/A")}
+            """
+        )
 
-        # Display message based on Job Description Match percentage
+        # Display hiring recommendation
+        match_percentage = float(response_data.get("Job Description Match", "0").replace('%', ''))
         if match_percentage >= 60:
-            st.text("Move forward with hiring")
+            st.success("Recommendation: Move forward with hiring.")
         else:
-            st.text("Not a Match")
+            st.warning("Recommendation: Not a match.")
+    else:
+        st.error("Please upload a resume file to proceed.")
